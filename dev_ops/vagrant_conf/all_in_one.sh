@@ -5,7 +5,7 @@
 DBNAME='development'
 PASSWORD='1234'
 PROJECTFOLDER='./'
-PROJECTNAME='my_api'
+PROJECTNAME='my_dev'
 DBUSER='root'
 
 # update / upgrade
