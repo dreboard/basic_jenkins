@@ -1,0 +1,8 @@
+/vendor/
+/.vagrant/
+/tests/
+/docs/
+/.idea
+/.settings
+/logs
+
