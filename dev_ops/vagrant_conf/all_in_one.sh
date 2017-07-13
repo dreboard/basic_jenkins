@@ -23,7 +23,6 @@ sudo add-apt-repository ppa:ondrej/php
 
 sudo apt-get update
 
-
 echo -e "\n--- Install PHP ---\n"
 sudo apt-get install -y php7.1 php7.1-opcache php7.1-phpdbg php7.1-mbstring php7.1-cli php7.1-imap php7.1-ldap php7.1-pgsql php7.1-pspell php7.1-recode php7.1-snmp php7.1-tidy php7.1-dev php7.1-intl php7.1-gd php7.1-zip php7.1-xml php7.1-curl php7.1-json php7.1-mcrypt
 sudo apt-get install php7.1-intl php7.1-xsl
@@ -39,9 +38,6 @@ zend_extension="/usr/lib/php/20160303/xdebug.so"
 xdebug.remote_enable=on
 xdebug.remote_connect_back=on
 EOF
-
-
-
 
 ##########################################################
 #				Apache Vhosts
@@ -85,12 +81,8 @@ sudo a2enmod rewrite
 ##########################################################
 #				Install Extras
 ##########################################################
-# install Composer
-curl -s https://getcomposer.org/installer | php
-mv composer.phar /usr/local/bin/composer
 
 sudo apt-get -y install curl git nano
-
 sudo apt-get install snmp
 
 # restart apache
@@ -98,21 +90,11 @@ sudo apt-get -y install libapache2-mod-php7.1
 sudo a2dismod php5
 sudo a2enmod php7.1
 
-
-echo -e "\n--- Install Jenkins ---\n"
-#commands
-#sudo service jenkins start
-#sudo service jenkins restart
-
-#https://pkg.jenkins.io/debian-stable/
-wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
-#Then add the following entry in your /etc/apt/sources.list:
-echo "deb https://pkg.jenkins.io/debian-stable binary/" | sudo tee -a /etc/apt/sources.list
-sudo add-apt-repository ppa:webupd8team/java -y
-sudo apt install -y oracle-java8-set-default
-sudo apt-get install -y oracle-java8-installer
-sudo apt-get install -y jenkins
-
 sudo apt-get -y autoremove
 
-service apache2 restart
+#service apache2 restart
+
+# install Composer
+echo "------------------------------------------ Installing Composer"
+curl -s https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer

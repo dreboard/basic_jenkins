@@ -4,4 +4,4 @@
 /.idea
 /.settings
 /logs
-
+*.txt
