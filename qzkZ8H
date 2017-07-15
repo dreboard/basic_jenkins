@@ -1,0 +1,3 @@
+#!/usr/bin/env
+php -v
+php composer.phar install

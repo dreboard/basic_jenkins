@@ -14,6 +14,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.memory = "512"
   end
 
+  config.push.define "staging", strategy: "ftp" do |push|
+    push.host = "localhost:1234"
+    push.username = "vagrant"
+    push.password = "vagrant"
+    push.destination = "./staging"
+  end
+
+  config.push.define "qa", strategy: "ftp" do |push|
+    push.host = "localhost:1235"
+    push.username = "vagrant"
+    push.password = "vagrant"
+    push.destination = "./vagrant"
+  end
+
   #config.vm.provision "bootstrap", type: "shell", path: "./dev_ops/vagrant_conf/all_in_one.sh"
 
   config.vm.provision "shell", inline: <<-SHELL
@@ -22,8 +36,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # install apache 2.5 and php 7
     sudo apt-get install -y apache2
-    #sudo cp /vagrant/dev_ops/apache2/apache2.conf /etc/apache2/apache2.conf
-    sudo cp /etc/apache2/apache2.conf /vagrant/dev_ops/apache2/apache2.conf
+    sudo a2enmod rewrite
+    sudo cp /vagrant/dev_ops/apache/api.conf /etc/apache2/sites-available
+    sudo a2ensite api
 
     sudo apt-get install software-properties-common
     sudo add-apt-repository ppa:ondrej/php
@@ -38,25 +53,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     echo -e "\n--- Installing Xdebug ---\n"
     sudo apt-get install -y php-xdebug
 
-    # enable mod_rewrite
-    sudo a2enmod rewrite
-
-    sudo apt-get -y install curl git nano
+    sudo apt-get -y install curl git nano tofrodos
     sudo apt-get install snmp
 
     sudo apt-get -y install libapache2-mod-php7.1
-
     sudo apt-get -y autoremove
-
-    # install Composer
-    echo "------------------------------------------ Installing Composer"
-    curl -s https://getcomposer.org/installer | php
-    sudo mv composer.phar /usr/local/bin/composer
-    cd . /vagrant && php composer.phar install
-
-    sudo service apache2 restart
-
+    #sudo service apache2 restart
   SHELL
+
+  config.vm.provision "shell", inline: <<-SHELL2
+  echo -e "\n------------------------------------------- Installing Composer\n"
+  fromdos /vagrant/composer.sh
+  curl -s https://getcomposer.org/installer | php
+  sudo mv composer.phar /usr/local/bin/composer
+  cd /vagrant && php composer.phar install
+  SHELL2
 
   config.vm.provision "bootstrap", type: "shell", path: "./dev_ops/vagrant_conf/run_always.sh", run: "always"
 
